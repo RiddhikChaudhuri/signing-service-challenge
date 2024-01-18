@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "3f9f1191-e21e-4872-ac82-f71b07ec8d7b",
+		"name": "Go Fiskaly Code Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "960233"
+	},
+	"item": [
+		{
+			"name": "Go Add New Signature Device",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"algorithm\": \"ECC\",\r\n    \"label\": \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v0/signaturedevice/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v0",
+						"signaturedevice",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Signature Device By Device Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"2132121231sdkdw\",\r\n    \"algorithm\": \"RSA\",\r\n    \"label\": \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v0/signaturedevice/search?deviceId=91da2273-448a-4c42-82a9-d745b8c4af0a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v0",
+						"signaturedevice",
+						"search"
+					],
+					"query": [
+						{
+							"key": "deviceId",
+							"value": "91da2273-448a-4c42-82a9-d745b8c4af0a"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch All Signature Devices In The System",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v0/signaturedevice/findAll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v0",
+						"signaturedevice",
+						"findAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch All Signature Transactions In The System",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v0/sign/transaction/findAll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v0",
+						"sign",
+						"transaction",
+						"findAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Signature Transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"deviceId\":\"e77ba7e3-be89-4d4b-93dc-0f4e4355505b\",\r\n    \"data\":\"Hello!!How are you\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v0/sign/transaction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v0",
+						"sign",
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Sign Transaction By Device Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"deviceId\":\"801578f0-97de-48d5-b14d-3d59bd4da772\",\r\n    \"data\":\"Hello!!How are you\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v0/sign/transaction/search?deviceId=d4d9b80e-8bcf-4bbc-8126-0a27d8298ecf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v0",
+						"sign",
+						"transaction",
+						"search"
+					],
+					"query": [
+						{
+							"key": "deviceId",
+							"value": "d4d9b80e-8bcf-4bbc-8126-0a27d8298ecf"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
