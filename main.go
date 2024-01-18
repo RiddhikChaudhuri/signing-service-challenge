@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 
@@ -23,18 +22,19 @@ const (
 func main() {
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+"password=%s dbname=%s sslmode=disable", postgreshost, port, user, password, dbname)
 	fmt.Println(psqlInfo)
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
+	//Removing PostgreSQL Database
+	//db, err := sql.Open("postgres", psqlInfo)
+	//if err != nil {
+	//	panic(err)
+	//}
 	storage := persistence.NewMemoryStore()
 
-	defer db.Close()
+	//defer db.Close()
 	// check db
-	err = db.Ping()
-	CheckError(err)
+	//err = db.Ping()
+	//CheckError(err)
 
-	fmt.Println("Connected!")
+	//fmt.Println("Connected!")
 	server := api.NewServer(ListenAddress, storage)
 
 	if err := server.Run(); err != nil {

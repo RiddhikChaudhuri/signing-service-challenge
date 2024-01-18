@@ -37,3 +37,8 @@ func (s *PostgresStorage) FindSignatureDeviceByID(deviceID string) (*domain.Sign
 
 	return &device, nil
 }
+
+// TODO Implement Other Relation DB Methods Same as storage.go So That relationalmemory.go implements storage.go
+func (s *PostgresStorage) CreateSignTransaction(sigRequest *domain.Signature) (signatureResponse *domain.Signature, err error) {
+	return nil, nil
+}
