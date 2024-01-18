@@ -37,9 +37,12 @@ func (s *Server) Run() error {
 	mux := http.NewServeMux()
 
 	mux.Handle("/api/v0/health", http.HandlerFunc(s.Health))
-	mux.Handle("/api/v0/add/signaturedevice", http.HandlerFunc(s.CreateSignatureDevice))
-	mux.Handle("/api/v0/search/signaturedevice", http.HandlerFunc(s.FindSignatureDeviceByID))
+	mux.Handle("/api/v0/signaturedevice/add", http.HandlerFunc(s.CreateSignatureDevice))
+	mux.Handle("/api/v0/signaturedevice/search", http.HandlerFunc(s.FindSignatureDeviceByID))
+	mux.Handle("/api/v0/signaturedevice/findAll", http.HandlerFunc(s.FindAllSignatureDevices))
 	mux.Handle("/api/v0/sign/transaction", http.HandlerFunc(s.SignTransaction))
+	mux.Handle("/api/v0/sign/transaction/search", http.HandlerFunc(s.FindSignatureByDeviceID))
+	mux.Handle("/api/v0/sign/transaction/findAll", http.HandlerFunc(s.FindAllSignatureTransactions))
 
 	// TODO: register further HandlerFuncs here ...
 

@@ -2,6 +2,7 @@ package service
 
 import (
 	"log"
+	"sync/atomic"
 	"time"
 
 	"github.com/fiskaly/coding-challenges/signing-service-challenge/crypto"
@@ -15,6 +16,7 @@ func AddNewSignatureDevice(csdr *domain.CreateSignatureDeviceRequest, s persiste
 	log.Println("Converting Add Device Request To Domain")
 	signatureDevice := ConvertToDomain(csdr)
 	pub, private, _ := crypto.GetKeyPair(signatureDevice.SignatureAlgorithm)
+
 	signatureDevice.PublicKey = pub
 	signatureDevice.PrivateKey = domain.EncryptedKey{Algorithm: signatureDevice.SignatureAlgorithm, Data: private}
 
@@ -37,7 +39,7 @@ func ConvertToDomain(d *domain.CreateSignatureDeviceRequest) domain.SignatureDev
 		ID:                 uuid.New().String(),
 		SignatureAlgorithm: getAlgorithm(d.Algorithm),
 		Label:              d.Label,
-		SignatureCounter:   domain.SafeCounter{},
+		SignatureCounter:   atomic.Int64{},
 		CreatedAt:          time.Now(),
 		UpdatedAt:          time.Now(),
 	}

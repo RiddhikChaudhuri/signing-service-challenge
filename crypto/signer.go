@@ -5,10 +5,15 @@ import (
 	"crypto/ecdsa"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
 	"fmt"
 
 	"github.com/fiskaly/coding-challenges/signing-service-challenge/domain"
 )
+
+type Signer interface {
+	Sign(dataToBeSigned []byte) ([]byte, error)
+}
 
 // RSASigner represents an RSA signer.
 type RSASigner struct {
@@ -19,6 +24,7 @@ type RSASigner struct {
 func NewRSASigner(privateKey crypto.PrivateKey) (*RSASigner, error) {
 	rsaPrivateKey, ok := privateKey.(*rsa.PrivateKey)
 	if !ok {
+		fmt.Printf("Actual Private Key Type: %T\n", privateKey)
 		return nil, fmt.Errorf("invalid private key type, expected *rsa.PrivateKey")
 	}
 	return &RSASigner{privateKey: rsaPrivateKey}, nil
@@ -26,7 +32,8 @@ func NewRSASigner(privateKey crypto.PrivateKey) (*RSASigner, error) {
 
 // Sign signs the provided data using RSA.
 func (s *RSASigner) Sign(dataToBeSigned []byte) ([]byte, error) {
-	return rsa.SignPKCS1v15(rand.Reader, s.privateKey, crypto.SHA256, dataToBeSigned)
+	hashed := sha256.Sum256(dataToBeSigned)
+	return rsa.SignPKCS1v15(rand.Reader, s.privateKey, crypto.SHA256, hashed[:])
 }
 
 // ECCSigner represents an ECC signer.
@@ -70,14 +77,13 @@ func GetKeyPair(algorithm string) (public, private []byte, err error) {
 		return marshaller.Marshal(*k)
 	case domain.ECC:
 		eccGenerator := ECCGenerator{}
-		k, errGenerator := eccGenerator.Generate()
+		eccEncoded, errGenerator := eccGenerator.Generate()
 		if errGenerator != nil {
 			err = errGenerator
 			return
 		}
-
 		marshaller := ECCMarshaler{}
-		return marshaller.Encode(*k)
+		return marshaller.Encode(*eccEncoded)
 	default:
 		err = fmt.Errorf("wrong algorithm Type %s", algorithm)
 		return

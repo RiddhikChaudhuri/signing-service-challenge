@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/fiskaly/coding-challenges/signing-service-challenge/domain"
@@ -27,7 +26,6 @@ func (s *Server) CreateSignatureDevice(response http.ResponseWriter, request *ht
 		})
 		return
 	}
-	fmt.Println("Are we coming here")
 	// Validation Check For Label
 	if createRequest.Label == "" {
 		WriteErrorResponse(response, http.StatusBadRequest, []string{"Label is required"})
@@ -70,4 +68,17 @@ func (s *Server) FindSignatureDeviceByID(response http.ResponseWriter, request *
 		return
 	}
 	WriteAPIResponse(response, http.StatusOK, signatureDevice)
+}
+
+func (s *Server) FindAllSignatureDevices(response http.ResponseWriter, request *http.Request) {
+	if request.Method != http.MethodGet {
+		WriteErrorResponse(response, http.StatusMethodNotAllowed, []string{
+			http.StatusText(http.StatusMethodNotAllowed),
+		})
+		return
+	}
+
+	// Call the persistence layer to find the device by ID
+	signatureDevices := s.storage.FindAllSignatureDevices()
+	WriteAPIResponse(response, http.StatusOK, signatureDevices)
 }

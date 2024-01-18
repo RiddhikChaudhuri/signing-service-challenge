@@ -2,6 +2,7 @@ package domain
 
 import (
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -12,7 +13,7 @@ type SignatureDevice struct {
 	SignatureAlgorithm string       `gorm:"not null" json:"signature_alg" validate:"required,oneof='RSA' 'ECC'"`
 	PrivateKey         EncryptedKey `gorm:"embedded" json:"-"`
 	PublicKey          []byte       `gorm:"not null" json:"public_key"`
-	SignatureCounter   SafeCounter  `gorm:"not null" json:"signature_counter"`
+	SignatureCounter   atomic.Int64 `gorm:"not null" json:"-"`
 	CreatedAt          time.Time    `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt          time.Time    `gorm:"autoUpdateTime" json:"updated_at"`
 }
@@ -29,9 +30,8 @@ type CreateSignatureDeviceRequest struct {
 }
 
 type SignatureResponse struct {
-	Signature   string `json:"signature"`
-	SignedData  string `json:"signed_data"`
-	DeviceLabel string `json:"device_label"`
+	Signature  string `json:"signature"`
+	SignedData string `json:"signed_data"`
 }
 
 type CreateSignatureDeviceResponse struct {
@@ -47,12 +47,4 @@ const (
 type SafeCounter struct {
 	mu sync.Mutex
 	v  map[string]int
-}
-
-// Inc increments the counter for the given key.
-func (c *SafeCounter) IncrementCounter(key string) {
-	c.mu.Lock()
-	// Lock so only one goroutine at a time can access the map c.v.
-	c.v[key]++
-	c.mu.Unlock()
 }

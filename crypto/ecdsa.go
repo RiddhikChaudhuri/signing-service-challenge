@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 )
 
 // ECCKeyPair is a DTO that holds ECC private and public keys.
@@ -22,13 +23,13 @@ func NewECCMarshaler() ECCMarshaler {
 
 // Encode takes an ECCKeyPair and encodes it to be written on disk.
 // It returns the public and the private key as a byte slice.
-func (m ECCMarshaler) Encode(keyPair ECCKeyPair) ([]byte, []byte, error) {
+func (m *ECCMarshaler) Encode(keyPair ECCKeyPair) ([]byte, []byte, error) {
 	privateKeyBytes, err := x509.MarshalECPrivateKey(keyPair.Private)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	publicKeyBytes, err := x509.MarshalPKIXPublicKey(&keyPair.Public)
+	publicKeyBytes, err := x509.MarshalPKIXPublicKey(keyPair.Public)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -47,7 +48,11 @@ func (m ECCMarshaler) Encode(keyPair ECCKeyPair) ([]byte, []byte, error) {
 }
 
 // Decode assembles an ECCKeyPair from an encoded private key.
-func (m ECCMarshaler) Decode(privateKeyBytes []byte) (*ECCKeyPair, error) {
+func (m *ECCMarshaler) Decode(privateKeyBytes []byte) (*ECCKeyPair, error) {
+	if privateKeyBytes == nil {
+		return nil, errors.New("private key Is not present")
+	}
+
 	block, _ := pem.Decode(privateKeyBytes)
 	privateKey, err := x509.ParseECPrivateKey(block.Bytes)
 	if err != nil {
